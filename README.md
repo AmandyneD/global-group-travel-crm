@@ -29,3 +29,11 @@ Ce projet implémente le back-end et la base de données de la solution CRM Sale
 - VS Code
 - Git & GitHub
 
+### Étape 3 – Développement des fonctionnalités essentielles
+- Implémentation des services CRUD (Account, Opportunity, Contract, Trip)
+- Ajout des validations métier (dates, montant, participants)
+- Développement du trigger automatique Opportunity → Trip__c
+- Création du handler associé (bulkification + anti-duplication)
+- Mise en place des tests unitaires (19 tests – 100% pass)
+- Implémentation de validation rules UI (cohérence des dates)
+- Tests fonctionnels validés dans l’org Salesforce
