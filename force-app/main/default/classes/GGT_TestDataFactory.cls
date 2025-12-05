@@ -29,8 +29,8 @@ public class GGT_TestDataFactory {
         Contract c = new Contract(
             AccountId = acc.Id,
             Status = 'Draft',
-            StartDate = Date.today(),
-            EndDate = Date.today().addMonths(12)
+            StartDate = Date.today()
+            // ⚠️ On ne touche plus à EndDate en Apex dans cette org
         );
         insert c;
         return c;

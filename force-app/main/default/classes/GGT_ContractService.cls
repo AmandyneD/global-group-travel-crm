@@ -1,120 +1,67 @@
-@IsTest
-public class GGT_ContractServiceTest {
+public with sharing class GGT_ContractService {
 
-    @IsTest
-    static void testCreateContracts() {
-        // GIVEN
-        Account acc = GGT_TestDataFactory.createAccount();
-
-        List<Contract> contracts = new List<Contract>{
-            new Contract(
-                AccountId = acc.Id,
-                Status = 'Draft',
-                StartDate = Date.today(),
-                EndDate = Date.today().addMonths(6)
-            )
-        };
-
-        // WHEN
-        List<Contract> inserted = GGT_ContractService.createContracts(contracts);
-
-        // THEN
-        System.assertEquals(1, inserted.size(), 'One contract should have been inserted');
-
-        Contract result = [
-            SELECT Id, AccountId FROM Contract WHERE Id = :inserted[0].Id
-        ];
-        System.assertEquals(acc.Id, result.AccountId);
-    }
-
-    @IsTest
-    static void testGetActiveContractsByAccount() {
-        // GIVEN
-        Account acc = GGT_TestDataFactory.createAccount();
-        
-        Contract activeContract = new Contract(
-            AccountId = acc.Id,
-            Status = 'Activated',
-            StartDate = Date.today(),
-            EndDate = Date.today().addMonths(12)
-        );
-        insert activeContract;
-
-        // WHEN
-        List<Contract> results = GGT_ContractService.getActiveContractsByAccount(acc.Id);
-
-        // THEN
-        System.assert(results.size() > 0, 'Should return at least one active contract');
-    }
-
-    @IsTest
-    static void testUpdateContracts() {
-        // GIVEN
-        Account acc = GGT_TestDataFactory.createAccount();
-        Contract c = GGT_TestDataFactory.createContract(acc);
-
-        c.Status = 'Activated';
-
-        // WHEN
-        List<Contract> updated = GGT_ContractService.updateContracts(new List<Contract>{ c });
-
-        // THEN
-        System.assertEquals('Activated', updated[0].Status);
-    }
-
-    @IsTest
-    static void testDeleteContracts() {
-        // GIVEN
-        Account acc = GGT_TestDataFactory.createAccount();
-        Contract c = GGT_TestDataFactory.createContract(acc);
-
-        // WHEN
-        GGT_ContractService.deleteContracts(new List<Id>{ c.Id });
-
-        // THEN
-        System.assertEquals(
-            0,
-            [SELECT Id FROM Contract WHERE Id = :c.Id].size(),
-            'Contract should have been deleted'
-        );
-    }
-
-    @IsTest
-    static void testContractValidation_missingAccount() {
-        // GIVEN
-        Contract c = new Contract(
-            Status = 'Draft',
-            StartDate = Date.today(),
-            EndDate = Date.today().addMonths(1)
-        ); // PAS d'AccountId
-
-        // WHEN / THEN
-        try {
-            GGT_ContractService.createContracts(new List<Contract>{ c });
-            System.assert(false, 'Expected exception for missing AccountId');
-        } catch (GGT_ServiceException e) {
-            System.assert(e.getMessage().contains('Account'), 'Error message should mention Account');
+    // CREATE
+    public static List<Contract> createContracts(List<Contract> contracts) {
+        if (contracts == null || contracts.isEmpty()) {
+            return new List<Contract>();
         }
+        validateContracts(contracts);
+        System.debug(LoggingLevel.INFO,
+            'GGT_ContractService.createContracts - Inserting ' + contracts.size() + ' contract(s)');
+        insert contracts;
+        return contracts;
     }
 
-    @IsTest
-    static void testContractValidation_badDates() {
-        // GIVEN
-        Account acc = GGT_TestDataFactory.createAccount();
+    // READ - Active contracts for a given account
+    public static List<Contract> getActiveContractsByAccount(Id accountId) {
+        if (accountId == null) {
+            throw new GGT_ServiceException('Account Id is required.');
+        }
 
-        Contract c = new Contract(
-            AccountId = acc.Id,
-            Status = 'Draft',
-            StartDate = Date.today().addMonths(2),
-            EndDate = Date.today().addMonths(1) // fin avant début -> invalide
-        );
+        System.debug(LoggingLevel.DEBUG,
+            'GGT_ContractService.getActiveContractsByAccount - AccountId = ' + accountId);
 
-        // WHEN / THEN
-        try {
-            GGT_ContractService.createContracts(new List<Contract>{ c });
-            System.assert(false, 'Expected exception for invalid date range');
-        } catch (GGT_ServiceException e) {
-            System.assert(e.getMessage().contains('StartDate'), 'Invalid dates should trigger validation');
+        return [
+            SELECT Id, ContractNumber, Status, StartDate, EndDate, AccountId
+            FROM Contract
+            WHERE AccountId = :accountId
+              AND Status = 'Activated'
+            LIMIT 50
+        ];
+    }
+
+    // UPDATE
+    public static List<Contract> updateContracts(List<Contract> contracts) {
+        if (contracts == null || contracts.isEmpty()) {
+            return new List<Contract>();
+        }
+        validateContracts(contracts);
+        System.debug(LoggingLevel.INFO,
+            'GGT_ContractService.updateContracts - Updating ' + contracts.size() + ' contract(s)');
+        update contracts;
+        return contracts;
+    }
+
+    // DELETE
+    public static void deleteContracts(List<Id> contractIds) {
+        if (contractIds == null || contractIds.isEmpty()) {
+            return;
+        }
+        System.debug(LoggingLevel.INFO,
+            'GGT_ContractService.deleteContracts - Deleting ' + contractIds.size() + ' contract(s)');
+        delete [SELECT Id FROM Contract WHERE Id IN :contractIds];
+    }
+
+    // VALIDATION
+    private static void validateContracts(List<Contract> contracts) {
+        for (Contract c : contracts) {
+            if (c.AccountId == null) {
+                throw new GGT_ServiceException('Contract must be related to an Account.');
+            }
+            // Ici, on lit seulement EndDate, on ne l’écrit jamais
+            if (c.StartDate != null && c.EndDate != null && c.StartDate > c.EndDate) {
+                throw new GGT_ServiceException('Contract StartDate cannot be after EndDate.');
+            }
         }
     }
 }
