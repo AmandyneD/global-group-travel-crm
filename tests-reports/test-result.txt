@@ -1,0 +1,42 @@
+=== Test Results
+TEST NAME                                                   OUTCOME  MESSAGE  RUNTIME (MS)
+──────────────────────────────────────────────────────────  ───────  ───────  ────────────
+GGT_OpportunityServiceTest.testCreateAndGetOpportunities    Pass              297         
+GGT_OpportunityServiceTest.testValidation_negativeAmount    Pass              76          
+GGT_ContractServiceTest.testCreateContracts                 Pass              285         
+GGT_ContractServiceTest.testDeleteContracts                 Pass              724         
+GGT_ContractServiceTest.testGetActiveContractsByAccount     Pass              138         
+GGT_ContractServiceTest.testUpdateContracts                 Pass              127         
+GGT_ContractServiceTest.testValidation_missingAccount       Pass              13          
+GGT_TripStatusUpdateBatchTest.testTripStatusUpdateBatch     Pass              524         
+GGT_OpportunityTripHandlerTest.testBulkTripCreation         Pass              652         
+GGT_OpportunityTripHandlerTest.testNoDuplicateTripCreation  Pass              254         
+GGT_OpportunityTripHandlerTest.testTripCreationOnClosedWon  Pass              204         
+GGT_TripServiceTest.testCreateAndGetTrips                   Pass              339         
+GGT_TripServiceTest.testDeleteTrips                         Pass              798         
+GGT_TripServiceTest.testTripValidation_negativeCost         Pass              111         
+GGT_TripServiceTest.testUpdateTrips                         Pass              163         
+GGT_AccountServiceTest.testAccountValidation_missingName    Pass              29          
+GGT_AccountServiceTest.testCreateAccounts                   Pass              204         
+GGT_AccountServiceTest.testDeleteAccounts                   Pass              886         
+GGT_AccountServiceTest.testReadAccountsByName               Pass              91          
+GGT_AccountServiceTest.testUpdateAccounts                   Pass              107         
+GGT_TripCancellationBatchTest.testTripCancellationBatch     Pass              549         
+
+
+
+
+=== Test Summary
+NAME                 VALUE                              
+───────────────────  ───────────────────────────────────
+Outcome              Passed                             
+Tests Ran            21                                 
+Pass Rate            100%                               
+Fail Rate            0%                                 
+Skip Rate            0%                                 
+Test Run Id          707gK00000MLSWZ                    
+Test Setup Time      0 ms                               
+Test Execution Time  6022 ms                            
+Test Total Time      6022 ms                            
+Org Id               00DgK00000G1ScCUAV                 
+Username             projet8.adesfonds581@agentforce.com

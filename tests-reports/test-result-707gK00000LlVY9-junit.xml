@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="force.apex" timestamp="2025-12-09T10:19:18.000Z" hostname="https://orgfarm-377d27c398-dev-ed.develop.my.salesforce.com" tests="21" failures="0"  errors="0"  time="8.50">
+        <properties>
+            <property name="outcome" value="Successful"/>
+            <property name="testsRan" value="21"/>
+            <property name="passing" value="21"/>
+            <property name="failing" value="0"/>
+            <property name="skipped" value="0"/>
+            <property name="passRate" value="100%"/>
+            <property name="failRate" value="0%"/>
+            <property name="testStartTime" value="Tue Dec 09 2025 11:19:18 AM"/>
+            <property name="testSetupTimeInMs" value="0"/>
+            <property name="testExecutionTime" value="8.50 s"/>
+            <property name="testTotalTime" value="8.50 s"/>
+            <property name="commandTime" value="0.21 s"/>
+            <property name="hostname" value="https://orgfarm-377d27c398-dev-ed.develop.my.salesforce.com"/>
+            <property name="orgId" value="00DgK00000G1ScCUAV"/>
+            <property name="username" value="projet8.adesfonds581@agentforce.com"/>
+            <property name="testRunId" value="707gK00000LlVY9"/>
+            <property name="userId" value="005gK00000SFqVLQA1"/>
+        </properties>
+        <testcase name="testBulkTripCreation" classname="GGT_OpportunityTripHandlerTest" time="0.85">
+        </testcase>
+        <testcase name="testNoDuplicateTripCreation" classname="GGT_OpportunityTripHandlerTest" time="0.33">
+        </testcase>
+        <testcase name="testTripCreationOnClosedWon" classname="GGT_OpportunityTripHandlerTest" time="0.28">
+        </testcase>
+        <testcase name="testAccountValidation_missingName" classname="GGT_AccountServiceTest" time="0.04">
+        </testcase>
+        <testcase name="testCreateAccounts" classname="GGT_AccountServiceTest" time="0.22">
+        </testcase>
+        <testcase name="testDeleteAccounts" classname="GGT_AccountServiceTest" time="1.26">
+        </testcase>
+        <testcase name="testReadAccountsByName" classname="GGT_AccountServiceTest" time="0.10">
+        </testcase>
+        <testcase name="testUpdateAccounts" classname="GGT_AccountServiceTest" time="0.10">
+        </testcase>
+        <testcase name="testTripCancellationBatch" classname="GGT_TripCancellationBatchTest" time="0.54">
+        </testcase>
+        <testcase name="testTripStatusUpdateBatch" classname="GGT_TripStatusUpdateBatchTest" time="0.78">
+        </testcase>
+        <testcase name="testCreateContracts" classname="GGT_ContractServiceTest" time="0.44">
+        </testcase>
+        <testcase name="testDeleteContracts" classname="GGT_ContractServiceTest" time="2.19">
+        </testcase>
+        <testcase name="testGetActiveContractsByAccount" classname="GGT_ContractServiceTest" time="0.15">
+        </testcase>
+        <testcase name="testUpdateContracts" classname="GGT_ContractServiceTest" time="0.14">
+        </testcase>
+        <testcase name="testValidation_missingAccount" classname="GGT_ContractServiceTest" time="0.01">
+        </testcase>
+        <testcase name="testCreateAndGetTrips" classname="GGT_TripServiceTest" time="0.24">
+        </testcase>
+        <testcase name="testDeleteTrips" classname="GGT_TripServiceTest" time="0.59">
+        </testcase>
+        <testcase name="testTripValidation_negativeCost" classname="GGT_TripServiceTest" time="0.08">
+        </testcase>
+        <testcase name="testUpdateTrips" classname="GGT_TripServiceTest" time="0.13">
+        </testcase>
+        <testcase name="testCreateAndGetOpportunities" classname="GGT_OpportunityServiceTest" time="0.30">
+        </testcase>
+        <testcase name="testValidation_negativeAmount" classname="GGT_OpportunityServiceTest" time="0.09">
+        </testcase>
+    </testsuite>
+</testsuites>

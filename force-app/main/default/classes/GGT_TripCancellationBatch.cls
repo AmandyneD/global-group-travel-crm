@@ -30,3 +30,4 @@ public class GGT_TripCancellationBatch implements Database.Batchable<SObject> {
             'GGT_TripCancellationBatch.finish - Trip cancellation batch completed');
     }
 }
+

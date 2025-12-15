@@ -1,46 +1,52 @@
-public class GGT_TripStatusUpdateBatch implements Database.Batchable<SObject> {
+global class GGT_TripStatusUpdateBatch implements Database.Batchable<Trip__c> {
 
-    public Database.QueryLocator start(Database.BatchableContext bc) {
-        System.debug(LoggingLevel.INFO,
-            'GGT_TripStatusUpdateBatch.start - Selecting trips for status update');
-
-        // On exclut les trips annulés, et on ne traite que ceux qui ont des dates renseignées
-        return Database.getQueryLocator([
-            SELECT Id, Status__c, Start_Date__c, End_Date__c
+    global Iterable<Trip__c> start(Database.BatchableContext bc) {
+        return [
+            SELECT Id, Start_Date__c, End_Date__c, Status__c
             FROM Trip__c
-            WHERE Status__c != 'Annulé'
-            AND Start_Date__c != null
-            AND End_Date__c != null
-        ]);
+            WHERE Start_Date__c != null
+              AND End_Date__c != null
+              AND Status__c != 'Annulé'
+        ];
     }
 
-    public void execute(Database.BatchableContext bc, List<Trip__c> trips) {
-        System.debug(LoggingLevel.INFO,
-            'GGT_TripStatusUpdateBatch.execute - Processing ' + trips.size() + ' trip(s)');
-
+    global void execute(Database.BatchableContext bc, List<Trip__c> scope) {
         Date today = Date.today();
+        List<Trip__c> toUpdate = new List<Trip__c>();
 
-        for (Trip__c t : trips) {
-            // On ignore par sécurité les trips sans dates, même si le SOQL les filtre déjà
-            if (t.Start_Date__c == null || t.End_Date__c == null) {
+        for (Trip__c trip : scope) {
+
+            // Sécurité : même si un record "Annulé" passe (changement entre start & execute), on ne le modifie jamais
+            if (trip.Status__c == 'Annulé') {
                 continue;
             }
 
-            if (today < t.Start_Date__c) {
-                t.Status__c = 'A venir';
-            } else if (today > t.End_Date__c) {
-                t.Status__c = 'Terminé';
-            } else {
-                // today entre start et end (inclus)
-                t.Status__c = 'En cours';
+            // Ignore records invalides (Start > End) pour éviter la validation rule
+            if (trip.Start_Date__c > trip.End_Date__c) {
+                System.debug(LoggingLevel.WARN,
+                    'Skipping invalid Trip (Start > End). Id=' + trip.Id +
+                    ' start=' + trip.Start_Date__c + ' end=' + trip.End_Date__c
+                );
+                continue;
+            }
+
+            String newStatus;
+            if (today < trip.Start_Date__c) newStatus = 'A venir';
+            else if (today > trip.End_Date__c) newStatus = 'Terminé';
+            else newStatus = 'En cours';
+
+            if (trip.Status__c != newStatus) {
+                trip.Status__c = newStatus;
+                toUpdate.add(trip);
             }
         }
 
-        update trips;
+        if (!toUpdate.isEmpty()) {
+            Database.update(toUpdate, false);
+        }
     }
 
-    public void finish(Database.BatchableContext bc) {
-        System.debug(LoggingLevel.INFO,
-            'GGT_TripStatusUpdateBatch.finish - Trip status update batch completed');
+    global void finish(Database.BatchableContext bc) {
+        System.debug('GGT_TripStatusUpdateBatch.finish - Trip status update batch completed');
     }
 }
